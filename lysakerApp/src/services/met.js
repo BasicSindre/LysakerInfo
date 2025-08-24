@@ -1,7 +1,12 @@
+// Calls our /api/met proxy on the same origin
+const MET_PROXY = '/api/met'
+
 export async function fetchWeather({ lat, lon }) {
-  const url = `https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=${lat}&lon=${lon}`
-  // Prod: MET ønsker identifiserende User-Agent. For best praksis, prox’ via backend.
-  const res = await fetch(url, { method: 'GET' })
-  if (!res.ok) throw new Error(`MET error: ${res.status}`)
-  return res.json()
+  const url = `${MET_PROXY}?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}`
+  const r = await fetch(url, { headers: { 'Accept': 'application/json' } })
+  if (!r.ok) {
+    const text = await r.text().catch(() => '')
+    throw new Error(`MET proxy ${r.status}: ${text || r.statusText}`)
+  }
+  return r.json()
 }

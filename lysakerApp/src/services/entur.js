@@ -1,42 +1,51 @@
-const ENTUR_URL = 'https://api.entur.io/journey-planner/v3/graphql'
+// Calls our /api/entur proxy on the same origin
+// Expect: fetchDepartures(stopPlaceId, _clientName, { timeRangeSec, num })
 
-const ENTUR_DEPARTURE_QUERY = `
-  query ($stopId: String!, $timeRange: Int!, $num: Int!) {
-    stopPlace(id: $stopId) {
-      id
-      name
-      estimatedCalls(timeRange: $timeRange, numberOfDepartures: $num) {
-        realtime
-        aimedDepartureTime
-        expectedDepartureTime
-        date
-        destinationDisplay { frontText }
-        quay { id }
-        serviceJourney {
-          journeyPattern {
-            line {
-              id
-              name
-              publicCode
-              transportMode
+const ENTUR_PROXY = '/api/entur'
+
+export async function fetchDepartures(stopPlaceId, _clientName, { timeRangeSec = 3 * 3600, num = 30 } = {}) {
+  // GraphQL query (same shape you used earlier)
+  const query = `
+    query ($id: String!, $start: DateTime, $timeRange: Int!, $numberOfDepartures: Int!) {
+      stopPlace(id: $id) {
+        id
+        name
+        estimatedCalls(startTime: $start, timeRange: $timeRange, numberOfDepartures: $numberOfDepartures) {
+          realtime
+          aimedDepartureTime
+          expectedDepartureTime
+          destinationDisplay { frontText }
+          serviceJourney {
+            journeyPattern {
+              line {
+                id
+                name
+                publicCode
+                transportMode
+              }
             }
           }
         }
       }
     }
-  }
-`
+  `
 
-export async function fetchDepartures(stopPlaceId, clientName, { timeRangeSec = 3*3600, num = 10 } = {}) {
-  const body = { query: ENTUR_DEPARTURE_QUERY, variables: { stopId: stopPlaceId, timeRange: timeRangeSec, num } }
-  const res = await fetch(ENTUR_URL, {
+  const variables = {
+    id: stopPlaceId,
+    start: new Date().toISOString(),
+    timeRange: timeRangeSec,
+    numberOfDepartures: num
+  }
+
+  const r = await fetch(ENTUR_PROXY, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'ET-Client-Name': clientName, // REQUIRED
-    },
-    body: JSON.stringify(body),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ query, variables }),
   })
-  if (!res.ok) throw new Error(`Entur error: ${res.status}`)
-  return res.json()
+
+  if (!r.ok) {
+    const text = await r.text().catch(() => '')
+    throw new Error(`Entur proxy ${r.status}: ${text || r.statusText}`)
+  }
+  return r.json()
 }
