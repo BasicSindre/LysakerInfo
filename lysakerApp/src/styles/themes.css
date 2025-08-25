@@ -1,0 +1,67 @@
+:root[data-theme="dark"]{
+  --bg:#0f1320; --bg-grad-1:#121936; --bg-grad-2:#0f1320;
+  --panel:#171d32; --panel-2:#141a2c; --glass: rgba(255,255,255,0.06); --line:#2a3556;
+  --text:#f2f4fa; --muted:#bcc6dc; --ok:#37e0b0; --warn:#ffd666; --danger:#ff8a8a;
+
+  --icon-sun:#ffd666;
+  --icon-cloud:#d9e2ff;
+  --icon-rain:#8fb6ff;
+  --icon-snow:#e6f0ff;
+  --icon-thunder:#ffdd77;
+  --icon-transport:#f2f4fa;
+}
+
+/* light */
+:root[data-theme="light"]{
+  --bg:#f7f9ff; --bg-grad-1:#ffffff; --bg-grad-2:#e9edf6;
+  --panel:#ffffff; --panel-2:#f3f6fc; --glass: rgba(0,0,0,0.05); --line:#cfd6e6;
+  --text:#111; --muted:#555; --ok:#1a8f6e; --warn:#c58a00; --danger:#b32222;
+
+  --icon-sun:#ffbb33;
+  --icon-cloud:#666666;
+  --icon-rain:#3388cc;
+  --icon-snow:#777777;
+  --icon-thunder:#cc8800;
+  --icon-transport:#111111;
+}
+
+/* autumn */
+:root[data-theme="autumn"]{
+  --bg:#241410; --bg-grad-1:#402018; --bg-grad-2:#241410;
+  --panel:#332018; --panel-2:#2a1712; --glass: rgba(255,200,150,0.06); --line:#52322a;
+  --text:#f6eae2; --muted:#d8b8a2; --ok:#e38f5a; --warn:#ffb84d; --danger:#e05a5a;
+
+  --icon-sun:#ff9933;
+  --icon-cloud:#d8b8a2;
+  --icon-rain:#e38f5a;
+  --icon-snow:#f6eae2;
+  --icon-thunder:#ffcc66;
+  --icon-transport:#f6eae2;
+}
+
+/* NEW: red (mørk, rød aksent) */
+:root[data-theme="red"]{
+  --bg:#200305; --bg-grad-1:#2a0508; --bg-grad-2:#200305;
+  --panel:#2d0a0d; --panel-2:#24070a; --glass: rgba(255,50,50,0.08); --line:#5a1a1f;
+  --text:#fbe9ec; --muted:#dba8b1;
+  --ok:#ff4d6d; --warn:#ffb84d; --danger:#ff4d4d;
+
+  --icon-sun:#ffb84d;
+  --icon-cloud:#f1c5cc;
+  --icon-rain:#ff6f82;
+  --icon-snow:#ffe9ec;
+  --icon-thunder:#ff9966;
+  --icon-transport:#fbe9ec;
+}
+
+
+/* ===== NSB/Vy linjefarger ===== */
+.line-L1   { background:#0060a9; }
+.line-L2   { background:#007f45; }
+.line-L3   { background:#eb5b25; }
+.line-L12  { background:#c93f3c; }
+.line-L13  { background:#e57200; }
+.line-L14  { background:#8b3ec9; }
+.line-R10  { background:#0099a9; }
+.line-R11  { background:#6b7d00; }
+.line-default{ background:#374978; }

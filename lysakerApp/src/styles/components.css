@@ -1,0 +1,54 @@
+.row{
+  display:grid; align-items:center; gap: clamp(10px, 1.4vw, 18px);
+  grid-template-columns: clamp(44px, 3.4vw, 58px) clamp(100px, 9vw, 132px) auto 1fr auto;
+  background: linear-gradient(180deg, var(--glass), rgba(255,255,255,0.03));
+  border:1px solid var(--line);
+  border-radius:16px;
+  box-shadow: 0 10px 24px rgba(0,0,0,.20);
+  padding: clamp(10px, 1.6vw, 16px) clamp(12px, 1.8vw, 20px);
+}
+
+/* SVG-ikonbeholder */
+.icon{
+  width: clamp(42px, 3.2vw, 56px); height: clamp(42px, 3.2vw, 56px);
+  display:grid; place-items:center;
+  border-radius: 14px;
+  background: var(--panel-2); border:1px solid var(--line);
+}
+
+/* Tidskolonne (forsinkelse: strøket aimed + ny expected) */
+.time{ font-variant-numeric: tabular-nums; color:var(--muted); font-size: clamp(1rem, 1.5vw, 1.15rem) }
+.time-col{ display:flex; flex-direction:column; line-height:1.05 }
+.time-aimed{ color: var(--muted); opacity:.85; }
+.strike{ text-decoration: line-through; text-decoration-thickness: 2px; text-decoration-color: rgba(255,255,255,.35); }
+.time-expected{ color: var(--text); font-weight: 800; font-size: clamp(1.05rem, 1.6vw, 1.25rem); }
+
+/* Linje-pill */
+.line-pill{
+  justify-self: start;
+  display:inline-flex; align-items:center;
+  padding: .35em .75em;
+  font-weight:800; letter-spacing:.2px;
+  border-radius: 999px;
+  font-size: clamp(.95rem, 1.5vw, 1.1rem);
+  text-transform: uppercase;
+  color:#fff;
+}
+
+/* Tekst */
+.title{ font-weight:700; font-size: clamp(1.05rem, 1.6vw, 1.3rem); letter-spacing:.1px }
+.meta{ color:var(--muted); font-size: clamp(.92rem, 1.3vw, 1.05rem) }
+
+/* Badges (status) */
+.badge{
+  display:inline-flex; align-items:center; gap:.5ch;
+  padding:.45em .85em; border-radius:999px; font-size: clamp(.85rem, 1.4vw, 1rem);
+  border:1px solid var(--line); background: var(--panel-2); color:var(--text);
+}
+.badge.ok{ background:var(--ok); color:#000; border-color: transparent; }
+.badge.warn{ background:var(--warn); color:#000; border-color: transparent; }
+.badge.danger{ background:var(--danger); color:#000; border-color: transparent; }
+
+.loading,.error{ padding:.8em; border-radius:14px; }
+.loading{ background:var(--panel-2); border:1px dashed var(--line); color:var(--muted) }
+.error{ background:#3a2030; border:1px solid #5a2a3b; color:#ffd8de }

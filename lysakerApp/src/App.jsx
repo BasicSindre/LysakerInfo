@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useState } from "react"
-import WeatherPanel from "./modules/WeatherPanel.jsx"
-import DeparturesPanel from "./modules/DeparturesPanel.jsx"
-import Clock from "./modules/Clock.jsx"
-import SettingsModal from "./modules/SettingsModal.jsx"
-import Screensaver from "./modules/Screensaver.jsx"
+import { useEffect, useMemo, useState, Suspense, lazy } from "react"
 import { STRINGS } from "./services/i18n.js"
+
+const WeatherPanel   = lazy(() => import("./modules/WeatherPanel.jsx"))
+const DeparturesPanel= lazy(() => import("./modules/DeparturesPanel.jsx"))
+const Clock          = lazy(() => import("./modules/Clock.jsx"))
+const SettingsModal  = lazy(() => import("./modules/SettingsModal.jsx"))
+const Screensaver    = lazy(() => import("./modules/Screensaver.jsx"))
 
 const THEMES = ["dark", "light", "autumn", "red"]
 
@@ -117,7 +118,9 @@ export default function App() {
                 {S.error}
               </span>
             )}
-            <Clock clock24={settings.clock24} />
+            <Suspense fallback={null}>
+              <Clock clock24={settings.clock24} />
+            </Suspense>
           </div>
         </div>
       </header>
@@ -138,25 +141,31 @@ export default function App() {
       </button>
 
       {showScreensaver ? (
-        <Screensaver clock24={settings.clock24} animatedIcons={settings.animatedIcons} />
+        <Suspense fallback={null}>
+          <Screensaver clock24={settings.clock24} animatedIcons={settings.animatedIcons} />
+        </Suspense>
       ) : (
         <main className="container">
           {settings.showWeather && (
-            <WeatherPanel
+            <Suspense fallback={null}>
+              <WeatherPanel
+                language={settings.language}
+                clock24={settings.clock24}
+                animatedIcons={settings.animatedIcons}
+                onCacheChange={(isCache) => setOffline(isCache)}
+                onFetchingChange={(isFetching) => setFetching(isFetching)}
+              />
+            </Suspense>
+          )}
+          <Suspense fallback={null}>
+            <DeparturesPanel
               language={settings.language}
+              overrideStopPlaceId={effectiveStopId}
               clock24={settings.clock24}
-              animatedIcons={settings.animatedIcons}
               onCacheChange={(isCache) => setOffline(isCache)}
               onFetchingChange={(isFetching) => setFetching(isFetching)}
             />
-          )}
-          <DeparturesPanel
-            language={settings.language}
-            overrideStopPlaceId={effectiveStopId}
-            clock24={settings.clock24}
-            onCacheChange={(isCache) => setOffline(isCache)}
-            onFetchingChange={(isFetching) => setFetching(isFetching)}
-          />
+          </Suspense>
         </main>
       )}
 
@@ -164,12 +173,16 @@ export default function App() {
         <span className="muted">{S.dataSource}</span>
       </footer>
 
-      <SettingsModal
-        isOpen={open}
-        onClose={() => setOpen(false)}
-        settings={settings}
-        setSettings={setSettings}
-      />
+      <Suspense fallback={null}>
+        {open && (
+          <SettingsModal
+            isOpen={open}
+            onClose={() => setOpen(false)}
+            settings={settings}
+            setSettings={setSettings}
+          />
+        )}
+      </Suspense>
     </div>
   )
 }

@@ -1,0 +1,63 @@
+/* === Subtile vær-animasjoner === */
+
+/* SOL */
+@keyframes sun-rotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes sun-glow {
+  0%,100% { filter: drop-shadow(0 0 0px rgba(255,255,255,0.0)); }
+  50%     { filter: drop-shadow(0 0 6px rgba(255,255,255,0.25)); }
+}
+.wx-anim-sun .sun-rays {
+  transform-origin: 12px 12px;
+  animation: sun-rotate 20s linear infinite;
+}
+.wx-anim-sun .sun-core {
+  animation: sun-glow 3.2s ease-in-out infinite;
+}
+
+/* REGN */
+@keyframes cloud-drift {
+  0%   { transform: translateX(0); opacity: 1; }
+  50%  { transform: translateX(1.5px); opacity: 0.98; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+@keyframes drop-fall {
+  0%   { transform: translateY(0); opacity: 0.95; }
+  90%  { opacity: 0.75; }
+  100% { transform: translateY(6px); opacity: 0; }
+}
+
+.wx-anim-rain .cloud {
+  animation: cloud-drift 12s ease-in-out infinite;
+}
+.wx-anim-rain .rain .drop {
+  animation: drop-fall 1.4s linear infinite;
+}
+.wx-anim-rain .rain .drop:nth-child(1){ animation-delay: 0s; }
+.wx-anim-rain .rain .drop:nth-child(2){ animation-delay: .25s; }
+.wx-anim-rain .rain .drop:nth-child(3){ animation-delay: .5s; }
+
+/* SNØ */
+@keyframes snow-fall {
+  0%   { transform: translateY(0) translateX(0); opacity: 0.95; }
+  50%  { opacity: 0.85; }
+  100% { transform: translateY(6px) translateX(1.5px); opacity: 0; }
+}
+.wx-anim-snow .flake {
+  animation: snow-fall 3.2s linear infinite;
+}
+.wx-anim-snow .flake:nth-child(1){ animation-delay: 0s; }
+.wx-anim-snow .flake:nth-child(2){ animation-delay: 0.6s; }
+.wx-anim-snow .flake:nth-child(3){ animation-delay: 1.2s; }
+
+/* FOG */
+@keyframes fog-drift {
+  0%   { transform: translateX(0); opacity: 0.8; }
+  50%  { transform: translateX(2px); opacity: 0.65; }
+  100% { transform: translateX(0); opacity: 0.8; }
+}
+.wx-anim-fog .fog {
+  animation: fog-drift 6s ease-in-out infinite;
+}

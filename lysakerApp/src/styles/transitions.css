@@ -1,0 +1,6 @@
+/* transitions.css */
+:root, body, .card, .row, .line-pill, .badge, .icon, .header-row, .container {
+  transition: background-color .6s ease, background .6s ease,
+              color .6s ease, border-color .6s ease, box-shadow .6s ease;
+}
+svg { transition: stroke .6s ease, fill .6s ease; }

@@ -13,7 +13,11 @@ export function useRowFit() {
   const ref = useRef(null)
   const [rows, setRows] = useState(4)
 
-  const measure = useCallback(() => {
+  // rAF-id for debounce
+  const rafIdRef = useRef(null)
+
+  // Den faktiske målingen (kalles kun fra scheduleMeasure)
+  const doMeasure = useCallback(() => {
     const body = ref.current
     if (!body) return
 
@@ -49,40 +53,51 @@ export function useRowFit() {
     setRows(r)
   }, [])
 
-  // First sync measurement
+  // Planlagt måling: samler mange kall til én pr frame
+  const scheduleMeasure = useCallback(() => {
+    if (rafIdRef.current != null) return
+    rafIdRef.current = requestAnimationFrame(() => {
+      rafIdRef.current = null
+      doMeasure()
+    })
+  }, [doMeasure])
+
+  // Første synkrone måling (etter layout)
   useLayoutEffect(() => {
-    measure()
-  }, [measure])
+    doMeasure()
+  }, [doMeasure])
 
-  // Ongoing measurements for dynamic changes
+  // Løpende målinger for dynamiske endringer
   useEffect(() => {
-    // A couple of extra checks after layout settles (fonts, etc.)
-    const raf1 = requestAnimationFrame(measure)
-    const raf2 = requestAnimationFrame(measure)
-    const t = setTimeout(measure, 250)
+    // Ekstra kontroller etter fonts/layouter:
+    const raf1 = requestAnimationFrame(scheduleMeasure)
+    const raf2 = requestAnimationFrame(scheduleMeasure)
+    const t = setTimeout(scheduleMeasure, 250)
 
-    const ro = new ResizeObserver(measure)
+    const ro = new ResizeObserver(scheduleMeasure)
     if (ref.current) ro.observe(ref.current)
 
-    // If children are added/removed/changed, re-measure
-    const mo = new MutationObserver(measure)
+    // Re-mål ved DOM-endringer i panel-body
+    const mo = new MutationObserver(scheduleMeasure)
     if (ref.current) mo.observe(ref.current, { childList: true, subtree: true })
 
-    window.addEventListener('resize', measure)
-    window.addEventListener('orientationchange', measure)
-    document.addEventListener('fullscreenchange', measure)
+    window.addEventListener('resize', scheduleMeasure, { passive: true })
+    window.addEventListener('orientationchange', scheduleMeasure, { passive: true })
+    document.addEventListener('fullscreenchange', scheduleMeasure, { passive: true })
 
     return () => {
-      cancelAnimationFrame(raf1)
-      cancelAnimationFrame(raf2)
+      if (raf1) cancelAnimationFrame(raf1)
+      if (raf2) cancelAnimationFrame(raf2)
+      if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current)
       clearTimeout(t)
       ro.disconnect()
       mo.disconnect()
-      window.removeEventListener('resize', measure)
-      window.removeEventListener('orientationchange', measure)
-      document.removeEventListener('fullscreenchange', measure)
+      window.removeEventListener('resize', scheduleMeasure)
+      window.removeEventListener('orientationchange', scheduleMeasure)
+      document.removeEventListener('fullscreenchange', scheduleMeasure)
     }
-  }, [measure])
+  }, [scheduleMeasure])
 
-  return [ref, rows, measure]
+  // Behold API: tredje returverdi heter fortsatt measure
+  return [ref, rows, scheduleMeasure]
 }
