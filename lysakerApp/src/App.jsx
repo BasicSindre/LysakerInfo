@@ -1,13 +1,11 @@
 import { useEffect, useMemo, useState, Suspense, lazy } from "react"
 import { STRINGS } from "./services/i18n.js"
 
-const WeatherPanel   = lazy(() => import("./modules/WeatherPanel.jsx"))
-const DeparturesPanel= lazy(() => import("./modules/DeparturesPanel.jsx"))
-const Clock          = lazy(() => import("./modules/Clock.jsx"))
-const SettingsModal  = lazy(() => import("./modules/SettingsModal.jsx"))
-const Screensaver    = lazy(() => import("./modules/Screensaver.jsx"))
-
-const THEMES = ["dark", "light", "autumn", "red"]
+const WeatherPanel    = lazy(() => import("./modules/WeatherPanel.jsx"))
+const DeparturesPanel = lazy(() => import("./modules/DeparturesPanel.jsx"))
+const Clock           = lazy(() => import("./modules/Clock.jsx"))
+const SettingsModal   = lazy(() => import("./modules/SettingsModal.jsx"))
+const Screensaver     = lazy(() => import("./modules/Screensaver.jsx"))
 
 function parseTimeToMinutes(hhmm = "00:00") {
   const [h, m] = (hhmm || "00:00").split(":").map(Number)
@@ -91,12 +89,15 @@ export default function App() {
     <div className="page">
       <header className="container">
         <div className="header-row">
+          {/* Logo – større */}
           <div>
-            <h1 style={{ transform: `scale(var(--scale-type, 1))`, transformOrigin: "left center" }}>
-              Lysaker • Info
-            </h1>
-            <p className="muted">{S.weather} + {S.departures}</p>
+            <img
+              src="/logo.svg"
+              alt="Lysaker Info"
+              style={{ height: "clamp(64px, 8vw, 160px)", display: "block" }}
+            />
           </div>
+
           <div style={{ display:"flex", alignItems:"center", gap:"12px" }}>
             <span
               className={`heartbeat-dot ${offline ? "is-offline" : fetching ? "is-fetching" : ""}`}
@@ -164,13 +165,14 @@ export default function App() {
               clock24={settings.clock24}
               onCacheChange={(isCache) => setOffline(isCache)}
               onFetchingChange={(isFetching) => setFetching(isFetching)}
+              onSoftError={(err) => setSoftError(err ? String(err) : null)}
             />
           </Suspense>
         </main>
       )}
 
       <footer className="container">
-        <span className="muted">{S.dataSource}</span>
+        <span className="muted">{S.copyright}</span>
       </footer>
 
       <Suspense fallback={null}>

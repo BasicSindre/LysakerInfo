@@ -15,7 +15,8 @@ export const STRINGS = {
     loadingDepartures: "Laster avganger…",
     noDepartures: "Ingen kommende tog.",
     error: "Noe gikk galt – prøver igjen",
-    dataSource: "Data: Entur & MET Norway"
+    dataSource: "Data: Entur & MET Norway",
+    copyright: "© 2025 Lysaker App"
   },
   en: {
     weather: "Weather",
@@ -33,6 +34,7 @@ export const STRINGS = {
     loadingDepartures: "Loading departures…",
     noDepartures: "No upcoming trains.",
     error: "Something went wrong – retrying",
-    dataSource: "Data: Entur & MET Norway"
+    dataSource: "Data: Entur & MET Norway",
+    copyright: "© 2025 Lysaker App"
   }
 }
