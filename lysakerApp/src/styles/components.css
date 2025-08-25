@@ -52,3 +52,26 @@
 .loading,.error{ padding:.8em; border-radius:14px; }
 .loading{ background:var(--panel-2); border:1px dashed var(--line); color:var(--muted) }
 .error{ background:#3a2030; border:1px solid #5a2a3b; color:#ffd8de }
+
+.switch {
+  position: relative; display: inline-block;
+  width: 46px; height: 24px;
+}
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider {
+  position: absolute; cursor: pointer;
+  inset: 0;
+  background-color: var(--line);
+  border-radius: 34px;
+  transition: .3s;
+}
+.slider:before {
+  position: absolute; content: "";
+  height: 18px; width: 18px;
+  left: 3px; bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: .3s;
+}
+input:checked + .slider { background-color: var(--ok); }
+input:checked + .slider:before { transform: translateX(22px); }
