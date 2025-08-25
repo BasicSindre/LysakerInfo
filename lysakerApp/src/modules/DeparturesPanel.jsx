@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { fetchDepartures } from '../services/entur'
+import { fetchDepartures } from '../services/entur'; 
 import { useRowFit } from '../hooks/useRowFit'
 import { RailIcon } from './Icons'
 import { STRINGS } from '../services/i18n.js'
