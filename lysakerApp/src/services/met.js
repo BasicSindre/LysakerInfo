@@ -3,7 +3,7 @@ export async function fetchWeather({ lat, lon }) {
     throw new Error('Invalid coordinates');
   }
 
-  const url = `/api/met?lat=${lat}&lon=${lon}`;
+  const url = `/api/met?lat=59.9142&lon=10.75`;
   const response = await fetch(url, {
     headers: { 'Accept': 'application/json' }
   });

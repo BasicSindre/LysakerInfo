@@ -1,55 +1,24 @@
 export default async function handler(req, res) {
-  const {
-    stopPlaceId,
-    timeRangeSec = 3 * 3600,
-    num = 30,
-    clientName = 'lysaker-info'
-  } = req.query;
+  const { lat, lon } = req.query;
 
-  if (!stopPlaceId || typeof stopPlaceId !== 'string' || stopPlaceId.trim() === '') {
-    return res.status(400).json({ error: 'Missing or invalid stopPlaceId' });
+  const latitude = parseFloat(lat);
+  const longitude = parseFloat(lon);
+
+  // Logg for debugging
+  console.log('MET API request:', { lat, lon, latitude, longitude });
+
+  if (!lat || !lon || isNaN(latitude) || isNaN(longitude)) {
+    return res.status(400).json({ error: 'Missing or invalid lat/lon' });
   }
 
-  const query = `
-    query ($id: String!, $start: DateTime, $timeRange: Int!, $numberOfDepartures: Int!) {
-      stopPlace(id: $id) {
-        id
-        name
-        estimatedCalls(startTime: $start, timeRange: $timeRange, numberOfDepartures: $numberOfDepartures) {
-          realtime
-          aimedDepartureTime
-          expectedDepartureTime
-          destinationDisplay { frontText }
-          serviceJourney {
-            journeyPattern {
-              line {
-                id
-                name
-                publicCode
-                transportMode
-              }
-            }
-          }
-        }
-      }
-    }
-  `;
-
-  const variables = {
-    id: stopPlaceId,
-    start: new Date().toISOString(),
-    timeRange: parseInt(timeRangeSec, 10),
-    numberOfDepartures: parseInt(num, 10)
-  };
+  const url = `https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=${latitude}&lon=${longitude}`;
 
   try {
-    const response = await fetch('https://api.entur.io/journey-planner/v3/graphql', {
-      method: 'POST',
+    const response = await fetch(url, {
       headers: {
-        'Content-Type': 'application/json',
-        'ET-Client-Name': clientName
-      },
-      body: JSON.stringify({ query, variables })
+        'Accept': 'application/json',
+        'User-Agent': 'lysaker-info@yourdomain.com' // MET krever dette
+      }
     });
 
     if (!response.ok) {
@@ -60,7 +29,7 @@ export default async function handler(req, res) {
     const data = await response.json();
     res.status(200).json(data);
   } catch (error) {
-    console.error('Entur API error:', error);
-    res.status(500).json({ error: 'Failed to fetch departures from Entur' });
+    console.error('MET API error:', error);
+    res.status(500).json({ error: 'Failed to fetch weather data' });
   }
 }
