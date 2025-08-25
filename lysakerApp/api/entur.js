@@ -1,8 +1,14 @@
 export default async function handler(req, res) {
-  const { stopPlaceId, timeRangeSec = 3 * 3600, num = 30, clientName = 'lysaker-info' } = req.query;
+  const {
+    stopPlaceId,
+    timeRangeSec = 3 * 3600,
+    num = 30,
+    clientName = 'lysaker-info'
+  } = req.query;
 
-  if (!stopPlaceId) {
-    return res.status(400).json({ error: 'Missing stopPlaceId' });
+  // Valider at stopPlaceId er en ikke-tom streng
+  if (!stopPlaceId || typeof stopPlaceId !== 'string' || stopPlaceId.trim() === '') {
+    return res.status(400).json({ error: 'Missing or invalid stopPlaceId' });
   }
 
   const query = `
@@ -33,8 +39,8 @@ export default async function handler(req, res) {
   const variables = {
     id: stopPlaceId,
     start: new Date().toISOString(),
-    timeRange: parseInt(timeRangeSec),
-    numberOfDepartures: parseInt(num)
+    timeRange: parseInt(timeRangeSec, 10),
+    numberOfDepartures: parseInt(num, 10)
   };
 
   try {
@@ -55,6 +61,7 @@ export default async function handler(req, res) {
     const data = await response.json();
     res.status(200).json(data);
   } catch (error) {
+    console.error('Entur API error:', error);
     res.status(500).json({ error: 'Failed to fetch departures from Entur' });
   }
 }
