@@ -4,8 +4,10 @@ import { useRowFit } from '../hooks/useRowFit'
 import { WeatherIcon } from './Icons'
 import { STRINGS } from '../services/i18n.js'
 
-const LAT = parseFloat(import.meta.env.VITE_LAT)
-const LON = parseFloat(import.meta.env.VITE_LON)
+
+const LAT = parseFloat(import.meta.env.VITE_LAT) || 59.9142;
+const LON = parseFloat(import.meta.env.VITE_LON) || 10.7500;
+
 
 const CACHE_KEY = "weatherCache"
 const NORMAL_INTERVAL = 5 * 60 * 1000
