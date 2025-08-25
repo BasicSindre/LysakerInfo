@@ -1,13 +1,31 @@
-const MET_PROXY = '/api/met';
+export async function fetchWeatherFromBrowser() {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) {
+      return reject(new Error('Geolocation is not supported'));
+    }
 
-export async function fetchWeather({ lat, lon }) {
-  const url = `${MET_PROXY}?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}`;
-  const r = await fetch(url, { headers: { 'Accept': 'application/json' } });
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
 
-  if (!r.ok) {
-    const text = await r.text().catch(() => '');
-    throw new Error(`MET proxy ${r.status}: ${text || r.statusText}`);
-  }
+      if (isNaN(lat) || isNaN(lon)) {
+        return reject(new Error('Invalid coordinates'));
+      }
 
-  return r.json();
+      try {
+        const response = await fetch(`/api/met?lat=${lat}&lon=${lon}`);
+        if (!response.ok) {
+          const text = await response.text();
+          return reject(new Error(`API error: ${text}`));
+        }
+
+        const data = await response.json();
+        resolve(data);
+      } catch (error) {
+        reject(error);
+      }
+    }, (error) => {
+      reject(new Error('Failed to get location: ' + error.message));
+    });
+  });
 }
