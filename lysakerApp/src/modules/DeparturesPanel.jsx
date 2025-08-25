@@ -120,9 +120,19 @@ export default function DeparturesPanel({
   let calls = data?.data?.stopPlace?.estimatedCalls ?? [];
 
   // ✅ Filtrer kun tog
-    calls = calls.filter(c =>
-      (c.serviceJourney?.journeyPattern?.line?.transportMode || "").toLowerCase() === "rail"
-    );
+    // calls = calls.filter(c =>
+    //   (c.serviceJourney?.journeyPattern?.line?.transportMode || "").toLowerCase() === "rail"
+    // );
+
+    const isTrainLine = (code) => {
+  const trainLines = ["L1", "L2", "L12", "L13", "L14", "R10", "R11"];
+  return trainLines.includes(code?.toUpperCase());
+};
+
+calls = calls.filter(c => {
+  const code = c.serviceJourney?.journeyPattern?.line?.publicCode;
+  return isTrainLine(code);
+});
 
 
   const items = calls.slice(0, rowsThatFit || 10);
