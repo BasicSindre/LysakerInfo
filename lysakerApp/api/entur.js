@@ -1,66 +1,65 @@
-export default async function handler(req, res) {
-  const {
-    stopPlaceId,
-    timeRangeSec = 3 * 3600,
-    num = 30,
-    clientName = 'lysaker-info'
-  } = req.query;
+export const config = { runtime: 'edge', regions: ['arn1','fra1','cdg1'] };
 
-  if (!stopPlaceId || typeof stopPlaceId !== 'string' || stopPlaceId.trim() === '') {
-    return res.status(400).json({ error: 'Missing or invalid stopPlaceId' });
-  }
+export default async function handler(req) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const stopPlaceId = searchParams.get('stopPlaceId');
+    const timeRangeSec = Number(searchParams.get('timeRangeSec') || 10800);
+    const num = Number(searchParams.get('num') || 60);
+    const clientName = searchParams.get('clientName') || 'lysaker-info';
 
-  const query = `
-    query ($id: String!, $start: DateTime, $timeRange: Int!, $numberOfDepartures: Int!) {
-      stopPlace(id: $id) {
-        id
-        name
-        estimatedCalls(startTime: $start, timeRange: $timeRange, numberOfDepartures: $numberOfDepartures) {
-          realtime
-          aimedDepartureTime
-          expectedDepartureTime
-          destinationDisplay { frontText }
-          serviceJourney {
-            journeyPattern {
-              line {
-                id
-                name
-                publicCode
-                transportMode
-              }
+    if (!stopPlaceId || !stopPlaceId.trim()) {
+      return new Response(JSON.stringify({ error: 'Missing or invalid stopPlaceId' }), {
+        status: 400, headers: { 'content-type': 'application/json' }
+      });
+    }
+
+    const query = `
+      query ($id: String!, $start: DateTime, $timeRange: Int!, $numberOfDepartures: Int!) {
+        stopPlace(id: $id) {
+          id
+          name
+          estimatedCalls(startTime: $start, timeRange: $timeRange, numberOfDepartures: $numberOfDepartures) {
+            realtime
+            aimedDepartureTime
+            expectedDepartureTime
+            destinationDisplay { frontText }
+            serviceJourney {
+              journeyPattern { line { id name publicCode transportMode } }
             }
           }
         }
-      }
-    }
-  `;
+      }`;
 
-  const variables = {
-    id: stopPlaceId,
-    start: new Date().toISOString(),
-    timeRange: parseInt(timeRangeSec, 10),
-    numberOfDepartures: parseInt(num, 10)
-  };
+    const variables = {
+      id: stopPlaceId,
+      start: new Date().toISOString(),
+      timeRange: timeRangeSec,
+      numberOfDepartures: num
+    };
 
-  try {
-    const response = await fetch('https://api.entur.io/journey-planner/v3/graphql', {
+    const upstream = await fetch('https://api.entur.io/journey-planner/v3/graphql', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'content-type': 'application/json',
+        // Viktig: bruk et fornuftig navn/epost. Entur kan throttle uklare klientnavn.
         'ET-Client-Name': clientName
       },
-      body: JSON.stringify({ query, variables })
+      body: JSON.stringify({ query, variables }),
+      cache: 'no-store'
     });
 
-    if (!response.ok) {
-      const text = await response.text();
-      return res.status(response.status).send(text);
-    }
-
-    const data = await response.json();
-    res.status(200).json(data);
-  } catch (error) {
-    console.error('Entur API error:', error);
-    res.status(500).json({ error: 'Failed to fetch departures from Entur' });
+    const body = await upstream.text();
+    return new Response(body, {
+      status: upstream.status,
+      headers: {
+        'content-type': 'application/json',
+        'cache-control': 's-maxage=30, stale-while-revalidate=30'
+      }
+    });
+  } catch (err) {
+    return new Response(JSON.stringify({ error: 'Failed to fetch departures from Entur' }), {
+      status: 500, headers: { 'content-type': 'application/json' }
+    });
   }
 }
