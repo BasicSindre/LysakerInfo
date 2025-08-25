@@ -78,14 +78,17 @@ export default function DeparturesPanel({
           num: 60
         });
 
+        console.log("Entur response:", json); // ✅ Logging
+
         if (!alive) return;
 
-        setData(json);
+        const parsedData = json?.data ? json.data : json;
+        setData(parsedData);
         setLastUpdatedTs(Date.now());
         setIsCache(false);
         onCacheChange?.(false);
 
-        localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: json }));
+        localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: parsedData }));
 
         requestAnimationFrame(measure);
         failCount = 0;
@@ -116,12 +119,16 @@ export default function DeparturesPanel({
     return () => { alive = false; if (timeoutId) clearTimeout(timeoutId); };
   }, [measure, overrideStopPlaceId, onCacheChange, onFetchingChange, language, clock24]);
 
-  let calls = data?.data?.stopPlace?.estimatedCalls ?? [];
+  let calls = data?.stopPlace?.estimatedCalls ?? [];
+
+  // ✅ Midlertidig vis alt (kommenter ut for feilsøking)
   calls = calls.filter(c =>
     (c.serviceJourney?.journeyPattern?.line?.transportMode || "").toLowerCase() === "rail"
   );
 
-  const items = calls.slice(0, rowsThatFit);
+  console.log("Filtered calls:", calls); // ✅ Logging
+
+  const items = calls.slice(0, rowsThatFit || 10);
   const now = nowRef.current;
 
   const updatedLabel = lastUpdatedTs
@@ -139,7 +146,7 @@ export default function DeparturesPanel({
         <div className="list">
           {!data && !error && <div className="loading">{S.loadingDepartures}</div>}
           {error && <div className="error">{error}</div>}
-          {data && items.length === 0 && <div className="error">{S.noDepartures}</div>}
+          {data && calls.length === 0 && <div className="error">{S.noDepartures}</div>}
 
           {items.map((c, idx) => {
             const line = c.serviceJourney?.journeyPattern?.line;
