@@ -1,10 +1,8 @@
-// Calls our /api/entur proxy on the same origin
-// Expect: fetchDepartures(stopPlaceId, _clientName, { timeRangeSec, num })
+// Bruk Entur sitt offentlige GraphQL-endepunkt
+const ENTUR_API_URL = 'https://corsproxy.io/?https://api.entur.io/journey-planner/v3/graphql'
 
-const ENTUR_PROXY = '/api/entur'
 
 export async function fetchDepartures(stopPlaceId, _clientName, { timeRangeSec = 3 * 3600, num = 30 } = {}) {
-  // GraphQL query (same shape you used earlier)
   const query = `
     query ($id: String!, $start: DateTime, $timeRange: Int!, $numberOfDepartures: Int!) {
       stopPlace(id: $id) {
@@ -37,15 +35,19 @@ export async function fetchDepartures(stopPlaceId, _clientName, { timeRangeSec =
     numberOfDepartures: num
   }
 
-  const r = await fetch(ENTUR_PROXY, {
+  const r = await fetch(ENTUR_API_URL, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'ET-Client-Name': _clientName || 'your-client-name' // Entur krever dette header-feltet
+    },
     body: JSON.stringify({ query, variables }),
   })
 
   if (!r.ok) {
     const text = await r.text().catch(() => '')
-    throw new Error(`Entur proxy ${r.status}: ${text || r.statusText}`)
+    throw new Error(`Entur API ${r.status}: ${text || r.statusText}`)
   }
+
   return r.json()
 }
