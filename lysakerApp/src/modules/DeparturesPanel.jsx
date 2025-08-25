@@ -78,8 +78,6 @@ export default function DeparturesPanel({
           num: 60
         });
 
-        console.log("Entur response:", json);
-
         if (!alive) return;
 
         const parsedData = json?.data ? json.data : json;
@@ -121,14 +119,10 @@ export default function DeparturesPanel({
 
   let calls = data?.stopPlace?.estimatedCalls ?? [];
 
-  console.log("Raw estimatedCalls:", calls);
-
-  // Midlertidig deaktivert filtrering for feilsøking
-  // calls = calls.filter(c =>
-  //   (c.serviceJourney?.journeyPattern?.line?.transportMode || "").toLowerCase() === "rail"
-  // );
-
-  console.log("Filtered calls:", calls);
+  // ✅ Filtrer kun tog
+  calls = calls.filter(c =>
+    (c.serviceJourney?.journeyPattern?.line?.transportMode || "").toLowerCase() === "rail"
+  );
 
   const items = calls.slice(0, rowsThatFit || 10);
   const now = nowRef.current;
