@@ -9,6 +9,12 @@
   --icon-snow:#e6f0ff;
   --icon-thunder:#ffdd77;
   --icon-transport:#f2f4fa;
+  --train-body: var(--icon-transport);
+  --train-window: #0f1320;
+  --train-light: #ffd666;
+  --train-wheel: #0b0f1c;
+  --train-wheel-stroke: #c8d4ff;
+  --train-rail: #8fb6ff;
 }
 
 /* light */
@@ -23,6 +29,12 @@
   --icon-snow:#777777;
   --icon-thunder:#cc8800;
   --icon-transport:#111111;
+  --train-body: var(--icon-transport);
+  --train-window: #ffffff;
+  --train-light: #ffbb33;
+  --train-wheel: #222222;
+  --train-wheel-stroke: #ffffff;
+  --train-rail: #333333;
 }
 
 /* autumn */
@@ -37,6 +49,13 @@
   --icon-snow:#f6eae2;
   --icon-thunder:#ffcc66;
   --icon-transport:#f6eae2;
+   --train-body: var(--icon-transport);
+  --train-window: #2a1712;
+  --train-light: #ffb84d;
+  --train-wheel: #1e120e;
+  --train-wheel-stroke: #f6eae2;
+  --train-rail: #e38f5a;
+  
 }
 
 /* NEW: red (mørk, rød aksent) */
@@ -52,6 +71,12 @@
   --icon-snow:#ffe9ec;
   --icon-thunder:#ff9966;
   --icon-transport:#fbe9ec;
+   --train-body: var(--icon-transport);
+  --train-window: #200305;
+  --train-light: #ffd36b;
+  --train-wheel: #140b0d;
+  --train-wheel-stroke: #f7ecee;
+  --train-rail: #ff8aa1;
 }
 
 

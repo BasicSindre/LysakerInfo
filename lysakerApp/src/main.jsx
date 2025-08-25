@@ -7,6 +7,7 @@ import './styles/components.css'
 import './styles/themes.css'
 import './styles/animations.css'
 import './styles/transitions.css'
+import './styles/icons.css'
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(

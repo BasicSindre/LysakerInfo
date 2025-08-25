@@ -1,0 +1,19 @@
+/* icons.css */
+/* Togikon */
+.rail-body    { fill: var(--train-body); }
+.rail-window  { fill: var(--train-window); }
+.rail-light   { fill: var(--train-light); }
+.rail-wheel   { fill: var(--train-wheel); stroke: var(--train-wheel-stroke); }
+.rail-rail    { stroke: var(--train-rail); }
+
+/* Værikoner */
+.sun-core     { fill: var(--icon-sun); }
+.sun-rays     { stroke: var(--icon-sun); }
+
+.cloud        { fill: var(--icon-cloud); }
+.rain .drop   { stroke: var(--icon-rain); }
+.thunder      { stroke: var(--icon-thunder); }
+.snow .flake  { fill: var(--icon-snow); }
+
+/* Smooth overganger når tema byttes */
+svg { transition: stroke .6s ease, fill .6s ease; }
