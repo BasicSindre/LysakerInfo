@@ -1,22 +1,55 @@
 export default async function handler(req, res) {
-  const { lat, lon } = req.query;
+  const {
+    stopPlaceId,
+    timeRangeSec = 3 * 3600,
+    num = 30,
+    clientName = 'lysaker-info'
+  } = req.query;
 
-  // Valider at lat og lon er tall og ikke NaN
-  const latitude = parseFloat(lat);
-  const longitude = parseFloat(lon);
-
-  if (!lat || !lon || isNaN(latitude) || isNaN(longitude)) {
-    return res.status(400).json({ error: 'Missing or invalid lat/lon' });
+  if (!stopPlaceId || typeof stopPlaceId !== 'string' || stopPlaceId.trim() === '') {
+    return res.status(400).json({ error: 'Missing or invalid stopPlaceId' });
   }
 
-  const url = `https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=${latitude}&lon=${longitude}`;
+  const query = `
+    query ($id: String!, $start: DateTime, $timeRange: Int!, $numberOfDepartures: Int!) {
+      stopPlace(id: $id) {
+        id
+        name
+        estimatedCalls(startTime: $start, timeRange: $timeRange, numberOfDepartures: $numberOfDepartures) {
+          realtime
+          aimedDepartureTime
+          expectedDepartureTime
+          destinationDisplay { frontText }
+          serviceJourney {
+            journeyPattern {
+              line {
+                id
+                name
+                publicCode
+                transportMode
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const variables = {
+    id: stopPlaceId,
+    start: new Date().toISOString(),
+    timeRange: parseInt(timeRangeSec, 10),
+    numberOfDepartures: parseInt(num, 10)
+  };
 
   try {
-    const response = await fetch(url, {
+    const response = await fetch('https://api.entur.io/journey-planner/v3/graphql', {
+      method: 'POST',
       headers: {
-        'Accept': 'application/json',
-        'User-Agent': 'lysaker-info@yourdomain.com' // MET krever dette
-      }
+        'Content-Type': 'application/json',
+        'ET-Client-Name': clientName
+      },
+      body: JSON.stringify({ query, variables })
     });
 
     if (!response.ok) {
@@ -27,7 +60,7 @@ export default async function handler(req, res) {
     const data = await response.json();
     res.status(200).json(data);
   } catch (error) {
-    console.error('MET API error:', error);
-    res.status(500).json({ error: 'Failed to fetch weather data' });
+    console.error('Entur API error:', error);
+    res.status(500).json({ error: 'Failed to fetch departures from Entur' });
   }
 }

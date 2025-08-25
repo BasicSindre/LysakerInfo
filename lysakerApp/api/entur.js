@@ -6,7 +6,6 @@ export default async function handler(req, res) {
     clientName = 'lysaker-info'
   } = req.query;
 
-  // Valider at stopPlaceId er en ikke-tom streng
   if (!stopPlaceId || typeof stopPlaceId !== 'string' || stopPlaceId.trim() === '') {
     return res.status(400).json({ error: 'Missing or invalid stopPlaceId' });
   }
