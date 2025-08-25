@@ -4,7 +4,7 @@ import { useRowFit } from '../hooks/useRowFit';
 import { RailIcon } from './Icons';
 import { STRINGS } from '../services/i18n.js';
 
-const ENV_STOP_ID = import.meta.env.VITE_STOPPLACE_ID || 'NSR:StopPlace:58367';
+const ENV_STOP_ID = import.meta.env.VITE_STOPPLACE_ID || 'NSR:StopPlace:582';
 const CLIENT = import.meta.env.VITE_ET_CLIENT_NAME || 'lysaker-info';
 
 const CACHE_KEY = "departuresCache";
