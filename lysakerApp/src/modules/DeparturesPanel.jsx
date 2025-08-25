@@ -120,9 +120,10 @@ export default function DeparturesPanel({
   let calls = data?.data?.stopPlace?.estimatedCalls ?? [];
 
   // ✅ Filtrer kun tog
-  calls = calls.filter(c =>
-    (c.serviceJourney?.journeyPattern?.line?.transportMode || "").toLowerCase() === "rail"
-  );
+    calls = calls.filter(c =>
+      (c.serviceJourney?.journeyPattern?.line?.transportMode || "").toLowerCase() === "rail"
+    );
+
 
   const items = calls.slice(0, rowsThatFit || 10);
   const now = nowRef.current;
