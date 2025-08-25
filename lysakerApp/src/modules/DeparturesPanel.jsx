@@ -117,12 +117,12 @@ export default function DeparturesPanel({
     return () => { alive = false; if (timeoutId) clearTimeout(timeoutId); };
   }, [measure, overrideStopPlaceId, onCacheChange, onFetchingChange, language, clock24]);
 
-  let calls = data?.data?.stopPlace?.estimatedCalls ?? [];
+  let calls = data?.stopPlace?.estimatedCalls ?? [];
 
   // ✅ Filtrer kun tog
-    // calls = calls.filter(c =>
-    //   (c.serviceJourney?.journeyPattern?.line?.transportMode || "").toLowerCase() === "rail"
-    // );
+    calls = calls.filter(c =>
+      (c.serviceJourney?.journeyPattern?.line?.transportMode || "").toLowerCase() === "rail"
+    );
 
 //     const isTrainLine = (code) => {
 //   const trainLines = ["L1", "L2", "L12", "L13", "L14", "R10", "R11"];
