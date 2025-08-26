@@ -19,13 +19,6 @@ function isWithinWindow(nowMinutes, startMin, endMin) {
   return nowMinutes >= startMin || nowMinutes < endMin
 }
 
-const [logoClicked, setLogoClicked] = useState();
-
-const handleLogoClick = () => {
-  setLogoClicked(true);
-  setTimeout(() => setLogoClicked(), 600); // Fjern klassen etter animasjonen
-};
-
 
 export default function App() {
   const [settings, setSettings] = useState({
@@ -98,7 +91,7 @@ export default function App() {
       <header className="container">
         <div className="header-row">
           {/* Logo – større */}
-          <div className='logo-top-right ${logoClicked ? "clicked" : ""}' onClick={handleLogoClick}>
+          <div className="logo-top-right">
             <img
               src="/logo.svg"
               alt="Lysaker Info"
