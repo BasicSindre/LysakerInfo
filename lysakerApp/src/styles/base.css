@@ -38,6 +38,12 @@ header{ padding: clamp(10px, 2vh, 20px) 0 clamp(6px, 1vh, 12px); }
   padding-left: 12px;
   z-index: 1000;
 }
+
+.logo-top-right.clicked {
+  animation: logoPulseRotate 0.6s ease;
+}
+
+
 .clock{ font-variant-numeric: tabular-nums; font-weight:600; font-size: clamp(5.1rem, 3.5vw, 5.9rem); }
 
 /* Plasser klokken midtstilt øverst */

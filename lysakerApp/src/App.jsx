@@ -19,6 +19,14 @@ function isWithinWindow(nowMinutes, startMin, endMin) {
   return nowMinutes >= startMin || nowMinutes < endMin
 }
 
+const [logoClicked, setLogoClicked] = useState(false);
+
+const handleLogoClick = () => {
+  setLogoClicked(true);
+  setTimeout(() => setLogoClicked(false), 600); // Fjern klassen etter animasjonen
+};
+
+
 export default function App() {
   const [settings, setSettings] = useState({
     theme: "dark",
@@ -90,7 +98,7 @@ export default function App() {
       <header className="container">
         <div className="header-row">
           {/* Logo – større */}
-          <div className="logo-top-right">
+          <div className='logo-top-right ${logoClicked ? "clicked" : ""}' onClick={handleLogoClick}>
             <img
               src="/logo.svg"
               alt="Lysaker Info"
@@ -98,7 +106,7 @@ export default function App() {
             />
           </div>
 
-          <div>
+          <div style={{ display:"flex", alignItems:"center", gap:"12px" }}>
             <Suspense fallback={null} className="clock-centered-top">
               <Clock clock24={settings.clock24} />
             </Suspense>
