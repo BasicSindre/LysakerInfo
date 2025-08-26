@@ -94,7 +94,7 @@ export default function App() {
             <img
               src="/logo.svg"
               alt="Lysaker Info"
-              style={{ height: "clamp(64px, 8vw, 160px)", display: "block", marginTop: "-12px" }}
+              style={{ height: "clamp(64px, 8vw, 160px)", display: "block" }}
             />
           </div>
 
