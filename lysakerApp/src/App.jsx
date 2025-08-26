@@ -99,6 +99,9 @@ export default function App() {
           </div>
 
           <div style={{ display:"flex", alignItems:"center", gap:"12px" }}>
+            <Suspense fallback={null} className="clock-centered-top">
+              <Clock clock24={settings.clock24} />
+            </Suspense>
             <span
               className={`heartbeat-dot ${offline ? "is-offline" : fetching ? "is-fetching" : ""}`}
               title={offline ? S.offline : fetching ? "Fetching…" : "Idle"}
@@ -119,9 +122,6 @@ export default function App() {
                 {S.error}
               </span>
             )}
-            <Suspense fallback={null} className="clock-centered-top">
-              <Clock clock24={settings.clock24} />
-            </Suspense>
           </div>
         </div>
       </header>
