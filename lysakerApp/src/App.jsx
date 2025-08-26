@@ -98,7 +98,7 @@ export default function App() {
             />
           </div>
 
-          <div style={{ display:"flex", alignItems:"center", gap:"12px" }}>
+          <div>
             <Suspense fallback={null} className="clock-centered-top">
               <Clock clock24={settings.clock24} />
             </Suspense>
