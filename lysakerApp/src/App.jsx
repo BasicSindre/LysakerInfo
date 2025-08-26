@@ -87,39 +87,44 @@ export default function App() {
 
   return (
     <div className="page">
-      <header className="container" style={{ position: "relative" }}>
-        {/* Logo – oppe til høyre */}
-        <div style={{
-          position: "absolute",
-          top: 0,
-          right: 0,
-          padding: "12px",
-          zIndex: 1000
-        }}>
-          <img
-            src="/logo.svg"
-            alt="Lysaker Info"
-            style={{
-              height: "clamp(64px, 8vw, 160px)",
-              display: "block"
-            }}
-          />
-        </div>
+      <header className="container">
+        <div className="header-row">
+          {/* Logo – større */}
+          <div className="logo-top-right">
+            <img
+              src="/logo.svg"
+              alt="Lysaker Info"
+              style={{ height: "clamp(64px, 8vw, 160px)", display: "block", marginTop: "-12px" }}
+            />
+          </div>
 
-        {/* Klokken – midtstilt øverst */}
-        <div style={{
-          position: "absolute",
-          top: "12px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          zIndex: 1000
-        }}>
-          <Suspense fallback={null}>
-            <Clock clock24={settings.clock24} style={{ fontSize: "2.5rem" }} />
-          </Suspense>
+          <div style={{ display:"flex", alignItems:"center", gap:"12px" }}>
+            <span
+              className={`heartbeat-dot ${offline ? "is-offline" : fetching ? "is-fetching" : ""}`}
+              title={offline ? S.offline : fetching ? "Fetching…" : "Idle"}
+              aria-hidden="true"
+            />
+            {offline && (
+              <span className="badge warn" style={{ fontSize:"0.9rem", padding:"4px 10px" }}>
+                {S.offline}
+              </span>
+            )}
+            {cameOnline && (
+              <span className="badge ok" style={{ fontSize:"0.9rem", padding:"4px 10px" }}>
+                {S.online}
+              </span>
+            )}
+            {softError && (
+              <span className="badge danger" style={{ fontSize:"0.9rem", padding:"4px 10px" }}>
+                {S.error}
+              </span>
+            )}
+            <Suspense fallback={null} className="clock-centered-top">
+              <Clock clock24={settings.clock24} />
+            </Suspense>
+          </div>
         </div>
       </header>
-
 
       <button
         aria-label={S.settings}
