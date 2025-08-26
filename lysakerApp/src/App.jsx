@@ -19,11 +19,11 @@ function isWithinWindow(nowMinutes, startMin, endMin) {
   return nowMinutes >= startMin || nowMinutes < endMin
 }
 
-const [logoClicked, setLogoClicked] = useState(false);
+const [logoClicked, setLogoClicked] = useState();
 
 const handleLogoClick = () => {
   setLogoClicked(true);
-  setTimeout(() => setLogoClicked(false), 600); // Fjern klassen etter animasjonen
+  setTimeout(() => setLogoClicked(), 600); // Fjern klassen etter animasjonen
 };
 
 
