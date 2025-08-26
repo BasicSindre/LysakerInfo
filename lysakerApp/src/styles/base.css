@@ -44,8 +44,8 @@ header{ padding: clamp(10px, 2vh, 20px) 0 clamp(6px, 1vh, 12px); }
 .clock-centered-top {
   position: absolute;
   top: 12px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 25%;
+  transform: translateX(-25%);
   z-index: 1000;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
